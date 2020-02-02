@@ -84,7 +84,7 @@ def get_init_image(content_img, init_noise_ratio):
 '''
 def compute_features(vgg_weights, pooling_type, input_img, layers):
     input = tf.placeholder(tf.float32, shape=input_img.shape)
-    net = Model.build_image_net(input, vgg_weights, pooling_type)
+    net = model.build_image_net(input, vgg_weights, pooling_type)
     features = {}
     with tf.Session() as sess:
         for layer in layers:
@@ -96,7 +96,7 @@ def compute_layer_masks(masks, layers, ds_type):
     masks_tf = masks_tf[np.newaxis, :, :, :] # -> [1, h, w, masks]
 
     input = tf.placeholder(tf.float32, shape=masks_tf.shape)
-    net = Model.build_mask_net(input, ds_type) # only do pooling, so no intervention between masks
+    net = model.build_mask_net(input, ds_type) # only do pooling, so no intervention between masks
     layer_masks = {}
     with tf.Session() as sess:
         for layer in layers:
@@ -106,7 +106,7 @@ def compute_layer_masks(masks, layers, ds_type):
 
 def build_target_net(vgg_weights, pooling_type, target_shape):
     input = tf.Variable( np.zeros(target_shape).astype('float32') )
-    net = Model.build_image_net(input, vgg_weights, pooling_type)
+    net = model.build_image_net(input, vgg_weights, pooling_type)
     net['input'] = input
     return net
 
@@ -267,7 +267,7 @@ def  main(args):
     compute features & build net
     '''
     # prepare model weights
-    vgg_weights = Model.prepare_model(args.model_path)
+    vgg_weights = model.prepare_model(args.model_path)
 
     # feature maps of specific layers
     if args.content_img:
@@ -358,7 +358,7 @@ def  main(args):
 
 
 if __name__ == '__main__':   
-    args = Parser.parse_args()
+    args = parser.parse_args()
     main(args)
 
 
